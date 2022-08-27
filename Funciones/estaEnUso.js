@@ -1,8 +1,8 @@
 function estaEnUso(valorActual, arrayObjetos, esEditar, llaveAEvaluar, valorAnterior){
 	/*
-		Prueba si un valor que es unico, como la cedula de un chofer o la placa de un vehiculo, 
-		está sendo usado (o ya pertenece) por uno de los choferes o vehuclos.  
-		Esta funcion es una generalización de probarCedula y una hipotetica probarPlaca. 
+		Prueba si un valor que es unico, como la cedula de un chofer, su email o la placa de un vehiculo, 
+		está siendo usado (o ya pertenece) por uno de los choferes o vehuclos.  
+		Esta funcion es una generalización de probarCedula, probarEmail y probarPlaca. 
 	*/
 
 	let arrayValores = arrayObjetos.map((objeto) => { return objeto[llaveAEvaluar]});
