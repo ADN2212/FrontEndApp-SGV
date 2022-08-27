@@ -5,6 +5,7 @@ import './App.css';
 //Componentes Compuestos:
 import ListaObjetos from './componentes/ListaObjetos.jsx';
 import BarraNavegacion from './componentes/BarraNavegacion.jsx';
+import CalcularGanacias from './componentes/CalcularGanancias.jsx';
 
 //Hooks:
 import React, { useState, useEffect} from 'react';
@@ -65,8 +66,8 @@ function App() {
     //console.log(choferes);
 
     //Endpoint de la API para crear un chofer, vehiculo o viaje:
-    let url = `http://localhost:8000/post_${tipoObjeto}`;
-    let jsonStr = JSON.stringify(json);//Transforma el json en una cadena de texto.
+
+    
 
     if (tipoObjeto === 'chofer' || tipoObjeto === 'vehiculo' || tipoObjeto === 'viaje'){  
       alert(`Creando ${tipoObjeto} ...`);
@@ -74,7 +75,22 @@ function App() {
         alert('Opcion no valida :(');
         return;//fin de la ejecución.
       }
+    
+    let jsonStr;
 
+    if (tipoObjeto === 'viaje'){
+      //Para evitar que salte un error porque no coincide el formato
+      let json2 = json;
+      json2['inicio_viaje'] += ':00Z';
+      json2['fin_viaje'] += ':00Z';
+      jsonStr = JSON.stringify(json2);
+
+    } else  {
+      jsonStr = JSON.stringify(json);//Transforma el json en una cadena de texto.
+    }
+
+    let url = `http://localhost:8000/post_${tipoObjeto}`;
+        
     try {  
         let response = await fetch(url, {
           method: 'POST',
@@ -115,7 +131,7 @@ function App() {
       let response = await fetch(url, {method: 'DELETE'});
       if (response.ok){
         //Este alert aparecera o no dependinedo de que tan rapido responda la API ¿?
-        alert(`El chofer de id = ${id} ha sido borrado exitosamente.`);
+        alert(`El ${tipoObjeto} de id = ${id} ha sido borrado exitosamente.`);
         return;        
       }     
     } catch (error){
@@ -131,14 +147,27 @@ function App() {
     let url = `http://localhost:8000/put_${tipoObjeto}/${id}`;
 
     //Transforma el JSON a una cadena de texto para poder ser enviado al Enpoint de la API.
-    let jsonStr = JSON.stringify(json);
-    console.log(jsonStr);
+    //let jsonStr = JSON.stringify(json);
+    //console.log(jsonStr);
     
     if (tipoObjeto === 'chofer' || tipoObjeto === 'vehiculo' || tipoObjeto === 'viaje'){  
       alert(`Actualizando ${tipoObjeto} ...`);
       } else  {
         alert('Opcion no valida :(');
         return;//fin de la ejecución.
+      }
+
+      let jsonStr;
+
+      if (tipoObjeto === 'viaje'){
+        //Para evitar que salte un error porque no coincide el formato
+        let json2 = json;//Esto es para no alterar el input.
+        json2['inicio_viaje'] += ':00Z';
+        json2['fin_viaje'] += ':00Z';
+        jsonStr = JSON.stringify(json2);
+
+      } else  {
+        jsonStr = JSON.stringify(json);//Transforma el json en una cadena de texto.
       }
 
       try {
@@ -165,8 +194,8 @@ function App() {
 
   //Cada useEfect hará la peticion a la API de forma individual y asincrona cada vez que el componente principal (App.js) sea renderizado.
   useEffect(() => {getAllData('vehiculo', setVehiculos)}, []);
-  //useEffect(() => {getAllData('chofere', setChoferes)}, []);
-  //useEffect(() => {getAllData('viaje', setViajes)}, []);
+  useEffect(() => {getAllData('chofere', setChoferes)}, []);
+  useEffect(() => {getAllData('viaje', setViajes)}, []);
   //useEffect(() => {console.log('<App /> ha sido renderizado ...')});
 
   return (
@@ -177,21 +206,30 @@ function App() {
         <Routes>
           <Route path='/' element = {<h1> Home </h1>}/>
           
-          <Route path = '/choferes' element = { <ListaObjetos  arrayObjetos = {choferes} tipoObjeto = {'chofer'} 
-                                                              postFunc = {postData}     deleteFunc = {deleteData} 
-                                                              putFunc = {putData}
-                                                              /> } 
+          <Route path = '/choferes' element = { <ListaObjetos 
+                          
+                          arrayObjetos = {choferes} tipoObjeto = {'chofer'} 
+                          postFunc = {postData}     deleteFunc = {deleteData} 
+                          putFunc = {putData} /> } 
           />
 
-          <Route path = '/vehiculos' element = {<ListaObjetos arrayObjetos = {vehiculos} tipoObjeto = {'vehiculo'} 
-                                                              postFunc = {postData} deleteFunc = {deleteData} 
-                                                              putFunc = {putData}
-                                                              />} 
-
-
+          <Route path = '/vehiculos' element = { <ListaObjetos 
+                          arrayObjetos = {vehiculos} tipoObjeto = {'vehiculo'} 
+                          postFunc = {postData} deleteFunc = {deleteData} 
+                          putFunc = {putData} /> } 
           />
 
-          <Route path = '/viajes' element = {<ListaObjetos arrayObjetos = {viajes} tipoObjeto = {'viaje'} />} />
+          <Route path = '/viajes' element = {<ListaObjetos  
+
+                          arrayObjetos = {viajes} tipoObjeto = {'viaje'} 
+                          arrayChoferes = {choferes}
+                          //Enviar solo los vehiculos que esten disponibles
+                          arrayVehiculos = {vehiculos.filter((vehiculo) => { return vehiculo.disponibilidad })}
+                          postFunc = {postData}
+                          putFunc = {putData} 
+                          deleteFunc = {deleteData} />} />
+
+          <Route path = '/calcular_ganacias' element = {<CalcularGanacias arrayViajes = {viajes} />} />
         </Routes>
     </Router>
     </div>      
