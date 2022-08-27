@@ -49,6 +49,7 @@ function Vehiculo({jsonTipoVehiculo, deleteFunc, putFunc, arrayVehiculos}){
 				<li> Años de Explotación: {jsonTipoVehiculo['agnos_explotacion']} años </li>
 				<li> Tipo de Servicio: {jsonTipoVehiculo['tipo_servicio']} </li>
 				<li> Cantidad de Asientos: {jsonTipoVehiculo['cantidad_asientos']} </li>
+				<li> Cantidad de Viajes: {jsonTipoVehiculo['cantidad_viajes']} </li>
 				<li> ¿Está disponible? { jsonTipoVehiculo['disponibilidad'] ? 'Si' : 'No'} </li>
 				<li> ¿Tiene aíre acondicionado? { jsonTipoVehiculo['climatizacion'] ? 'Si' : 'No'} </li>				
 				<li>

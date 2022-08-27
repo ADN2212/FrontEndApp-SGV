@@ -8,20 +8,24 @@ export default function FormaVehiculo({arrayVehiculos, postFunc, putFunc, jsonTi
 
 	//Se sigue la misma logica que en el componente FormaChofer.
 
-	let defaultVehiculo = {'tipo_de_comnustible' : 'Gasolina', 'tipo_servicio' : 'Regular', 'disponibilidad' : true, 'climatizacion' : false };
+	let defaultVehiculo = {'tipo_de_comnustible' : 'Gasolina', 'tipo_servicio' : 'Regular', 'disponibilidad' : true, 'climatizacion': false };
 	let titulo = 'Nuevo Vehiculo:';
 	let esEditar = jsonTipoVehiculo && putFunc && !postFunc;
 	let placaAnterior;
-		
+	
+
 	if (esEditar){
 		defaultVehiculo = jsonTipoVehiculo;
 		titulo = 'Editar Vehiculo:';
 		placaAnterior = defaultVehiculo['placa'];
 	}
 
+	const [disponible, setDisponible] = useState(defaultVehiculo['disponibilidad']);
+	const [climatizacion, setClimatizacion] = useState(defaultVehiculo['climatizacion']);
 	const [vehiculoData, setVehiculoData] = useState(defaultVehiculo);
 	
-	//useEffect(() => {console.log(esEditar)});
+	//useEffect(() => {console.log(vehiculoData['disponibilidad'])});
+	//useEffect(() => {console.log(disponible)}, [disponible]);
 
 	function EnviarData(evento){
 
@@ -42,11 +46,15 @@ export default function FormaVehiculo({arrayVehiculos, postFunc, putFunc, jsonTi
 			return;
 		}
 
+		//Tranformar los valores que deben ser de tipo númerico:
 		vehiculoData['agnos_explotacion'] = parseInt(vehiculoData['agnos_explotacion']);
 		vehiculoData['cantidad_asientos'] = parseInt(vehiculoData['cantidad_asientos']);
 		vehiculoData['kms_recorridos'] = parseInt(vehiculoData['kms_recorridos']);
-		vehiculoData['peso_en_toneladas'] = parseInt(vehiculoData['peso_en_toneladas']);
+		vehiculoData['peso_en_toneladas'] = parseFloat(vehiculoData['peso_en_toneladas']);
 		vehiculoData['velocidad_maxima'] = parseInt(vehiculoData['velocidad_maxima']);
+		//Asiganar valores de los otros hooks al SJON princiapal:
+		vehiculoData['disponibilidad'] = disponible;		
+		vehiculoData['climatizacion'] = climatizacion;
 
 		if (!vehiculoData['peso_en_toneladas']){
 		//Si el user no mueve la barra del peso el valor queda = null;
@@ -59,13 +67,18 @@ export default function FormaVehiculo({arrayVehiculos, postFunc, putFunc, jsonTi
 			//alert('Editando ...');
 			console.log('Editando');
 			putFunc(vehiculoData['id_vehiculo'], 'vehiculo', vehiculoData);
+			//evento.preventDefault();
+			//console.log(JSON.stringify(vehiculoData));
+			//console.log(vehiculoData);
+			return;
 		}
 
 		//evento.preventDefault();
 		//console.log(vehiculoData);
 		postFunc(vehiculoData, 'vehiculo');
 		//setVehiculoData({});
-		//console.log(JSON.stringify(vehiculoData));
+		//console.log(vehiculoData);
+		return;
 	}
 
 
@@ -125,7 +138,7 @@ export default function FormaVehiculo({arrayVehiculos, postFunc, putFunc, jsonTi
 				Total de Kilometros Recorridos:
 				<input 
 					type = 'number'
-					min = '5'
+					min = {esEditar ? `${defaultVehiculo['kms_recorridos']}` : '5'}
 					name = 'kms_recorridos'
 					value = {vehiculoData.kms_recorridos || ""}
 					required
@@ -148,7 +161,7 @@ export default function FormaVehiculo({arrayVehiculos, postFunc, putFunc, jsonTi
 				Años de Explotación:
 				<input 
 					type = 'number'
-					min = '0'
+					min = {esEditar ? `${defaultVehiculo['agnos_explotacion']}` : '0'}
 					max = '50'
 					name = 'agnos_explotacion'
 					value = {vehiculoData.agnos_explotacion || ""}
@@ -178,19 +191,31 @@ export default function FormaVehiculo({arrayVehiculos, postFunc, putFunc, jsonTi
 			</label>
 			<br></br>
 			<label>
+				Cantidad de Viajes:
+				<input
+					type = 'number'
+					min = {esEditar ? `${defaultVehiculo['cantidad_viajes']}` : '0'}
+					name = 'cantidad_viajes'
+					value = {vehiculoData.cantidad_viajes || ""}
+					required
+					onChange = {(evento) => {alCambiar(evento, vehiculoData, setVehiculoData)}} />		 
+			</label>
+			<br></br>
+			<label>
 				¿Está disponible?
-				<select name = 'disponibilidad' value = {vehiculoData.disponibilidad || ""} onChange = {(evento) => {alCambiar(evento, vehiculoData, setVehiculoData)}}>
-					<option value = {true}> Si </option>
-					<option value = {false}> No </option>
-				</select>	
+				<input	type = 'checkbox' 
+								name = 'disponibilidad'  
+								defaultChecked = {disponible}
+								onChange = {() => {setDisponible(!disponible)}} />
+			
 			</label>
 			<br></br>
 			<label>
 				¿Tiene aire acondicionado?
-				<select name = 'climatizacion' value = {vehiculoData.climatizacion || ""} onChange = {(evento) => {alCambiar(evento, vehiculoData, setVehiculoData)}}>
-					<option value = {false}> No </option>
-					<option value = {true}> Si </option>					
-				</select>	
+				<input	type = 'checkbox'	
+								name = 'climatizacion'
+								defaultChecked = {climatizacion}
+								onChange = {() => {setClimatizacion(!climatizacion)}} />
 			</label>
 			<br></br>
 			<input type='submit' />			
@@ -201,9 +226,19 @@ export default function FormaVehiculo({arrayVehiculos, postFunc, putFunc, jsonTi
 
 
 
+/*	
+<select name = 'disponibilidad' value = {vehiculoData.disponibilidad || ""} onChange = {(evento) => {alCambiar(evento, vehiculoData, setVehiculoData)}}>
+	<option value = {true}> Si </option>
+	<option value = {false}> No </option>
+</select>
+*/	
 
-
-
+/*
+<select name = 'climatizacion' value = { vehiculoData.climatizacion || "" } onChange = {(evento) => {alCambiar(evento, vehiculoData, setVehiculoData)}}>
+	<option value = {false}> No </option>
+	<option value = {true}> Si </option>					
+</select>	
+*/
 
 
 

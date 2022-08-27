@@ -13,6 +13,7 @@ export default function FormaChofer({arrayChoferes, postFunc, putFunc, jsonTipoC
 	let defaultChofer = {'nivel_escolar': 'Inicial', 'sexo': 'Masculino', 'clasificacion' : 'B'};	
 	let titulo = 'Nuevo Chofer';
 	let cedulaAnteiror;
+	let emailAnterior;
 
 	//Si se pasan como argumentos un JSON tipo chofer y la funcion para actualizar, 
 	//y ademas de que no se pase la funcion para crear, entoces se va a hacer una actualizacion PUT = UPDATE.
@@ -25,6 +26,7 @@ export default function FormaChofer({arrayChoferes, postFunc, putFunc, jsonTipoC
 		defaultChofer = jsonTipoChofer;
 		titulo = 'Editar Chofer';
 		cedulaAnteiror = defaultChofer['cedula'];
+		emailAnterior = defaultChofer['email'];
 	}
 
 	const [data, setData] = useState(defaultChofer);
@@ -37,17 +39,23 @@ export default function FormaChofer({arrayChoferes, postFunc, putFunc, jsonTipoC
 		//evento.preventDefault();//Evita que se recargue la pagina, al no usar este metodo se eteran evitando varios problemas.
 
 		//console.log(data.cedula);
+
 		if (estaEnUso(data.cedula, arrayChoferes, esEditar, 'cedula', cedulaAnteiror)) {//Ademas de esta se pueden probar que se complan otras condiciones antes de que se haga la llamada a la API.
 			//Esto se puede hacer con una ventana modal.
 			alert(`Ya hay un chofer de cedula ${data.cedula} en la Base de Datos`);
 			evento.preventDefault();//para que no se borre la info que hay en la forma.			
+		} else if (estaEnUso(data.email, arrayChoferes, esEditar, 'email', emailAnterior)){
+			alert(`Ya hay un chofer con el email ${data.email} en la Base de Datos`)
+			evento.preventDefault();
 		} else {
 			//De aqui en adelante empieza la logica para hacer el POST o PUT en la API.
 
 			//Transformar los datos a los que les corresponde ser numericos.			
 			data['agnos_experiencia'] = parseInt(data['agnos_experiencia']);
 			data['cantidad_de_multas'] = parseInt(data['cantidad_de_multas']);
-			data['edad'] = parseInt(data['edad']);			
+			data['edad'] = parseInt(data['edad']);
+			data['cantidad_viajes'] = parseInt(data['cantidad_viajes']);
+
 			//Luego llamar a la funcion que hace la request a la API.
 			if (esEditar){
 				//evento.preventDefault();
@@ -56,8 +64,7 @@ export default function FormaChofer({arrayChoferes, postFunc, putFunc, jsonTipoC
 				//console.log('Editando ...');
 			} else {
 				postFunc(data, 'chofer');
-			}
-			
+			}			
 			//if (postFunc(data, 'chofer')){
 				//Si la request ha sido exitosa, borrar la info de la forma:
 				//setData(defaultChofer);//No es nesesario hacerlo si voy a permitir que se recargue la pagina.			
@@ -118,7 +125,7 @@ export default function FormaChofer({arrayChoferes, postFunc, putFunc, jsonTipoC
 					name = 'numero_telefono'
 					value = {data.numero_telefono || ""}
 					pattern= '8(09|29|49)-[0-9]{3}-[0-9]{4}'
-					title = 'Los números de telefono válidos en República Dominicana empiezan por 804, 809 y 829 y estan seguidos por una serie de 7 digitos sperados en partes 3 y 4 por guiones.' 
+					title = 'Los números de telefono válidos en República Dominicana empiezan por 804, 809 y 829 y estan seguidos por una serie de 7 digitos sperados en partes de 3 y 4 por guiones.' 
 					required
 					onChange = {(evento) => {alCambiar(evento, data, setData)}} />														
 			</label>
@@ -143,7 +150,7 @@ export default function FormaChofer({arrayChoferes, postFunc, putFunc, jsonTipoC
 			</label>
 			<br></br>
 			<label>
-			Nivel Escolar:
+				Nivel Escolar:
 				<select name = 'nivel_escolar' value = {data.nivel_escolar || ""} onChange = {(evento) => {alCambiar(evento, data, setData)}}>
 					<option value = 'Inicial'> Inicial </option>
 					<option value = 'Primaria'> Primaría </option>
@@ -153,7 +160,7 @@ export default function FormaChofer({arrayChoferes, postFunc, putFunc, jsonTipoC
 			</label>
 			<br></br>
 			<label>
-			Sexo:
+				Sexo:
 				<select name = 'sexo' value = {data.sexo || ""} onChange = {(evento) => {alCambiar(evento, data, setData)}}>
 					<option value = 'Masculino'> Masculino </option>	
 					<option value = 'Femenino'> Femenino </option>	
@@ -177,11 +184,21 @@ export default function FormaChofer({arrayChoferes, postFunc, putFunc, jsonTipoC
 				<input 
 					type = 'number'
 					min = '0'
-					max = '100'
 					name = 'cantidad_de_multas'
 					value = {data.cantidad_de_multas || ""}
 					required
 					onChange = {(evento) => {alCambiar(evento, data, setData)}} />														
+			</label>
+			<br></br>
+			<label>
+				Cantidad de Viajes:
+				<input
+					type = 'number'
+					min = {esEditar ? `${defaultChofer['cantidad_viajes']}` : '0'}
+					name = 'cantidad_viajes' 
+					value = {data.cantidad_viajes || ""}
+					required
+					onChange = {(evento) => {alCambiar(evento, data, setData)}} />	
 			</label>
 			<br></br>
 			<label>

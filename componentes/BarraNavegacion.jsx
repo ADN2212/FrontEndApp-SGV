@@ -6,7 +6,6 @@ export default function BarraNavegacion(){
 	return (
 				<nav>
 					<ul>
-
 						<Link to = '/choferes'>
 							<li> Ver Choferes </li>
 						</Link>
@@ -18,9 +17,10 @@ export default function BarraNavegacion(){
 						<Link to = '/viajes'>
 							<li> Ver Viajes </li>
 						</Link>
-
-						<li> Calcular Ganancias </li>
-					
+						
+						<Link to = '/calcular_ganacias'>
+							<li> Calcular Ganancias </li>
+						</Link>
 					</ul>
 				</nav>
 		)

@@ -51,6 +51,7 @@ function Chofer({arrayChoferes, jsonTipoChofer, deleteFunc, putFunc}){
 				<li> Sexo: {jsonTipoChofer['sexo']} </li>
 				<li> Años de Experiencia: {jsonTipoChofer['agnos_experiencia']} </li>
 				<li> Cantidad de Multas: {jsonTipoChofer['cantidad_de_multas']} </li>
+				<li> Cantidad de Viajes: {jsonTipoChofer['cantidad_viajes']}</li>	
 				<li> Clasificación: {jsonTipoChofer['clasificacion']} </li>
 				<li>
 					<b>Opcines:</b>

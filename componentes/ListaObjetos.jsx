@@ -10,7 +10,7 @@ import FormaViaje from './FormaViaje.jsx';
 
 import { useState, useEffect} from 'react';
 
-function ListaObjetos({arrayObjetos, tipoObjeto, postFunc, deleteFunc, putFunc}){	
+function ListaObjetos({ arrayObjetos, tipoObjeto, postFunc, deleteFunc, putFunc, arrayChoferes, arrayVehiculos }){	
 	/*
 	Este componente muestra todos los objetos (choferes, vehiculos o viajes) que están en la Base de Datos de la API.
 	*/	
@@ -28,7 +28,12 @@ function ListaObjetos({arrayObjetos, tipoObjeto, postFunc, deleteFunc, putFunc})
 			return <FormaVehiculo arrayVehiculos = {arrayObjetos} postFunc = {postFunc} />;
 			}
 			if (tipoObjeto === 'viaje'){
-			return <FormaViaje />;
+			return <FormaViaje	arrayChoferes = {arrayChoferes}
+								arrayVehiculos = {arrayVehiculos}
+								arrayViajes = {arrayObjetos}
+								postFunc = {postFunc}
+								putFunc = {putFunc}
+								esEditar = {false} />
 			}
 		}
 		return;//Si mostrarForma = false, no se renderizará ninguna Forma.
@@ -49,10 +54,8 @@ function ListaObjetos({arrayObjetos, tipoObjeto, postFunc, deleteFunc, putFunc})
 			
 			{/*Al hacer clicl aqui, desplegar la forma o redireccionar a otra pagina ?*/}
 			<button onClick = {() => {setMostrarForma(!mostrarForma)}}>
-		 		 {
-
-		 		 	!mostrarForma ? <h4>Agregar un {tipoObjeto} </h4> : <h4>Cerrar Fromulario</h4> 
-
+		 		 	{
+		 		 		!mostrarForma ? <h4>Agregar un {tipoObjeto} </h4> : <h4>Cerrar Fromulario</h4> 
 		 			}
 			</button>
 			
@@ -86,7 +89,12 @@ function ListaObjetos({arrayObjetos, tipoObjeto, postFunc, deleteFunc, putFunc})
 					tipoObjeto === 'viaje' ? arrayObjetos.map((viaje) => {
 						return <Viaje
 								key = {viaje['id_viaje']}
-								jsonTipoViaje = {viaje} />
+								jsonTipoViaje = {viaje}
+								arrayViajes = {arrayObjetos}
+								arrayVehiculos = {arrayVehiculos}
+								arrayChoferes = {arrayChoferes}
+								putFunc = {putFunc}
+								deleteFunc = {deleteFunc} />
 					}):
 						<h3> Tipo de objeto no reconocido </h3> 										
 				}
