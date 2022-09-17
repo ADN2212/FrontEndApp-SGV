@@ -1,0 +1,22 @@
+a:hover{
+	/*color: green;*/
+	/*text-decoration: underline;*/
+	border-style: solid;
+	border-radius: 5px;
+	/*background-color: white;*/
+	/*font-style: normal;*/
+}
+
+
+
+#app{
+
+	/*background-color: gray;*/
+}
+
+.listado {
+	height: 600px;
+	overflow: scroll;
+}
+
+
