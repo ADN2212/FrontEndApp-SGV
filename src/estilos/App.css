@@ -1,0 +1,29 @@
+a:hover{
+	border-style: solid;
+	border-radius: 5px;
+}
+
+#app {
+
+	background-color: black;
+}
+
+.listado {
+	height: 600px;
+	overflow: scroll;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
