@@ -10,7 +10,7 @@ function CalcularGanacias({ arrayViajes }) {
 	const [viajesFiltrados, setViajesFiltrados] = useState([]);
 
 	function filtrarViajes(evento) {
-		//Filtra los viajes segun las fechas de inicio y fin que se den como parametro en la forma.
+		//Filtra los viajes segun las fecha de inicio y fin que se den como parametro en la forma.
 		evento.preventDefault();
 
 		let inicioViaje = new Date(fechas['inicio_viaje']);
