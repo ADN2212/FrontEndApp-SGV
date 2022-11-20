@@ -21,7 +21,7 @@ function CalcularGanacias({ arrayViajes }) {
 			swal({
 				icon: 'error',
 				title: 'Error Fechas',
-				text: 'Procure que la fecha de inicio del viaje sea anterior a la del final de este.',
+				text: 'Procure que la fechas de inicio del viaje sea anterior a la del final de este.',
 			});
 			evento.preventDefault();
 			return; //Si no se cumple esta condicion, no es nesesario seguir ejecutando esta función.
