@@ -1,6 +1,7 @@
 FrontEndApp-Let's Go Bus
 
 Aplicación hecha con React JS que corresponde al frontEnd de la app.
+
 Pasos a seguir:
 
 Para poder ejecutar esta app en su ordenador necesitará tener instalado Node.js con las librerías que figuran en el archivo ‘package.json’ de este repositorio.
